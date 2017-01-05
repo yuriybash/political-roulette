@@ -491,7 +491,7 @@ class Delay extends React.Component {
     render() {
         return (
             <div>
-                <h3 className="please_wait">Loading...</h3>
+                <h3 className="please_wait">Please wait, looking for a conservative</h3>
                 <ReactLoading type="cylon" color="white" height={'60%'} width={'60%'} />
             </div>
         )

@@ -62,3 +62,15 @@ root,
   margin-right: 40vh;
   margin-top: 30vh;
 }
+
+video{
+  padding: 5vh;
+}
+
+#received_video {
+  width: 35%;
+}
+
+#local_video {
+  width: 25%;
+}
