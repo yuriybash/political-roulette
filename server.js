@@ -74,24 +74,36 @@ wsServer.on('request', function(request){
                         connectionArray.push(connection);
 
                         let target_queue = (msg.party === 'liberal') ? con_queue : lib_queue;
+                        let outgoing_msg = {};
 
-                        console.log("target_queue: ", target_queue);
-                        console.log(target_queue);
                         if(target_queue.length < 1){
 
                             console.log("no queue avail.");
 
                             let self_queue = (msg.party === 'liberal') ? lib_queue : con_queue;
-                            self_queue.concat(connection);
+                            self_queue.push(connection);
 
-                            let outgoing_msg = {
+                            outgoing_msg = {
                                 type: "delay",
                                 message: "Please wait while we pair you with someone. This may take a minute."
                             };
 
-                            sendToOneUser(connection.clientID, JSON.stringify(outgoing_msg));
+                        } else {
+                            console.log('about to pair you');
+                            let peer = target_queue.shift();
+
+                            outgoing_msg = {
+                                type: "peer_info",
+                                peer_clientID: peer.clientID
+                            };
+
                         }
 
+                        sendToOneUser(connection.clientID, JSON.stringify(outgoing_msg));
+                        break;
+                default:
+                    console.log("sending message from: ", msg.clientID, " and sending it to: ", msg.target);
+                    sendToOneUser(msg.target, JSON.stringify(msg));
             }
 
         }
