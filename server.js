@@ -34,6 +34,7 @@ function originIsAllowed(origin){
 function sendToOneUser(target_clientID, msgString){
     let target_conn = getConnectionForID(target_clientID);
     if(target_conn){
+        log('sending');
         target_conn.sendUTF(msgString);
     }
 }
@@ -43,6 +44,7 @@ function getConnectionForID(target_clientID){
     let i;
 
     for(i = 0; i < connectionArray.length; i++){
+        console.log("one search");
         if(connectionArray[i].clientID === target_clientID){
             connect = connectionArray[i];
             break;
@@ -64,47 +66,34 @@ wsServer.on('request', function(request){
         if(message.type === 'utf8'){
             log("Received Message: " + message.utf8Data);
 
-            let sendToClients = true;
-            msg = JSON.parse(message.utf8Data);
-            let connect = getConnectionForID(msg.clientID);
-
+            let msg = JSON.parse(message.utf8Data);
             switch(msg.type){
                     case "invite":
-                        console.log("received invite message, message: ", msg);
-                        debugger;
-                        log("Connection accepted from " + connection.remoteAddress + ".");
+
                         connection.clientID = msg.clientID;
                         connectionArray.push(connection);
 
-
                         let target_queue = (msg.party === 'liberal') ? con_queue : lib_queue;
-                        if(!target_queue){
 
-                            let target_queue = (msg.party === 'liberal') ? lib_queue : con_queue;
-                            target_queue.concat(connection);
+                        console.log("target_queue: ", target_queue);
+                        console.log(target_queue);
+                        if(target_queue.length < 1){
 
-                            let msg = {
+                            console.log("no queue avail.");
+
+                            let self_queue = (msg.party === 'liberal') ? lib_queue : con_queue;
+                            self_queue.concat(connection);
+
+                            let outgoing_msg = {
                                 type: "delay",
                                 message: "Please wait while we pair you with someone. This may take a minute."
                             };
 
-                            sendToOneUser()
+                            sendToOneUser(connection.clientID, JSON.stringify(outgoing_msg));
                         }
 
             }
 
-            // if(sendToClients){
-            //     let msgString = JSON.stringify(msg);
-            //     let i;
-            //
-            //     if (msg.target && msg.target !== undefined && msg.target.length !== 0) {
-            //         sendToOneUser(msg.target, msgString);
-            //     } else {
-            //         for (i=0; i<connectionArray.length; i++) {
-            //             connectionArray[i].sendUTF(msgString);
-            //         }
-            //     }
-            // }
         }
     });
 
