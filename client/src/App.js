@@ -2,21 +2,13 @@ import React, { Component } from 'react';
 import './App.css';
 import { Button } from 'reactstrap';
 import { PageHeader } from 'reactstrap';
+import ReactLoading from 'react-loading';
+
 const uuidv4 = require('uuid/v4');
 
 
-/*
-CREDIT: https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling
- */
-
-
-// Get our hostname
-
+/* START WEBSOCKET-RELATED VARS */
 var myHostname = window.location.hostname;
-console.log("Hostname: " + myHostname);
-
-// WebSocket chat/signaling channel variables.
-
 var connection = null;
 var clientID = 0;
 
@@ -42,19 +34,25 @@ var myUsername = null;
 var targetUsername = null;      // To store username of other peer
 var myPeerConnection = null;    // RTCPeerConnection
 
+
 // To work both with and without addTrack() we need to note
 // if it's available
 
 var hasAddTrack = false;
 
+/*
+END WEBSOCKET-RELATED VARS
+ */
+
+
+
+/* START WSS CODE */
 function log(text) {
     var time = new Date();
-
     console.log("[" + time.toLocaleTimeString() + "] " + text);
 }
 
-function connect(party) {
-
+function connect(party, on_delay) {
 
     var serverUrl;
     var scheme = "wss";
@@ -81,15 +79,9 @@ function connect(party) {
 
         console.log("received message via websockets");
 
-        // var chatFrameDocument = document.getElementById("chatbox").contentDocument;
-        var text = "";
-
         console.log("evt: ", evt);
         var msg = JSON.parse(evt.data);
-        console.log("Message received: ");
-        console.log(msg);
-        var time = new Date(msg.date);
-        var timeStr = time.toLocaleTimeString();
+        log("message received: " + msg);
 
         switch(msg.type) {
             // case "id":
@@ -99,6 +91,8 @@ function connect(party) {
 
             case "delay":
                 console.log("sorry, you have to wait!");
+                on_delay();
+                break;
 
             // Signaling messages: these messages are used to trade WebRTC
             // signaling information during negotiations leading up to a video
@@ -133,7 +127,6 @@ function connect(party) {
 
 function invite(party) {
     log("Starting to prepare an invitation");
-    setTimeout(5000);
     if (myPeerConnection) {
         alert("You can't start a call because you already have one open!");
     } else {
@@ -144,26 +137,20 @@ function invite(party) {
 
     }
 }
+
 function sendToServer(msg) {
     let msgJSON = JSON.stringify(msg);
     console.log("Sending '" + msg.type + "' message: " + msgJSON);
     connection.send(msgJSON);
 }
 
-
-/*
-
-END MOZILLA-RELATED CODE
- */
-
-window.connect = connect;
-window.sendToServer = sendToServer;
+/* END WSS CODE */
 
 
 
 
 
-
+/* APP CODE */
 class Video extends React.Component{
 
     hangUpCall(){
@@ -186,6 +173,18 @@ class Video extends React.Component{
 
 }
 
+class Delay extends React.Component {
+
+    render() {
+        return (
+            <div>
+                <h3 class="please_wait">Loading...</h3>
+                <ReactLoading type="cylon" color="white" height={'60%'} width={'60%'} />
+            </div>
+        )
+    }
+}
+
 class UserSelection extends React.Component {
 
     render() {
@@ -200,17 +199,25 @@ class UserSelection extends React.Component {
 
 class App extends Component {
 
+  on_delay(){
+      this.setState({
+          isHidden: true,
+          videoIsHidden: true,
+          delayIsHidden: false
+      })
+  };
 
   state = {
         response: '',
         isHidden: false,
-        videoIsHidden: true
+        videoIsHidden: true,
+        delayIsHidden: true
     };
 
   toggleHidden(){
       this.setState({
           isHidden: !this.state.isHidden,
-          videoIsHidden: !this.state.videoIsHidden
+          // videoIsHidden: !this.state.videoIsHidden
       });
   }
 
@@ -218,7 +225,7 @@ class App extends Component {
       this.toggleHidden();
       console.log("starting call for party: ", party);
 
-      connect(party);
+      connect(party, this.on_delay.bind(this));
       // invite(party);
 
 
@@ -239,9 +246,14 @@ class App extends Component {
           <div className="video">
               {!this.state.videoIsHidden && <Video/>}
           </div>
+          <div className="delay">
+              {!this.state.delayIsHidden && <Delay/>}
+          </div>
       </div>
     );
   }
 }
 
 export default App;
+
+/* END APP CODE */

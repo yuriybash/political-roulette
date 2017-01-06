@@ -46,3 +46,19 @@ root,
   font-size: 28px;
   padding: 5%;
 }
+
+.delay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 45%;
+  margin-left: 24vh;
+  /*float: left;*/
+}
+
+.please_wait {
+  color: white;
+  margin-right: 40vh;
+  margin-top: 30vh;
+}
