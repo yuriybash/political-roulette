@@ -5,9 +5,22 @@ var url = require('url');
 var fs = require('fs');
 var WebSocketServer = require('websocket').server;
 
+var httpsOptions = {
+    key: fs.readFileSync("/Users/yuriy/create-react-app-master/conversations/key.pem"),
+    cert: fs.readFileSync("/Users/yuriy/create-react-app-master/conversations/cert.pem")
+};
+
+const app = express();
+var httpsServer = https.createServer(httpsOptions, app);
+
+
+httpsServer.listen(6503, function(){
+    log("server is listening on port 6503")
+});
+
 var connectionArray = [];
-var nextID = Date.now();
-var appendToMakeUnique = 1;
+var lib_queue = [];
+var con_queue = [];
 
 function log(text){
     let time = new Date();
@@ -18,38 +31,19 @@ function originIsAllowed(origin){
     return true;
 }
 
-function isUsernameUnique(name){
-    let isUnique = true;
-    let i;
-
-    for(i = 0; i < connectionArray.length; i++){
-        if(connectionArray[i].username == name){
-            isUnique = false;
-            break;
-        }
-    }
-
-    return isUnique;
-}
-
-function sendToOneUser(target, msgString){
-    let isUnique = true;
-    let i;
-
-    for(i = 0; i < connectionArray.length; i++){
-        if(connectionArray[i].username == name){
-            connectionArray[i].sendUTF(msgString);
-            break;
-        }
+function sendToOneUser(target_clientID, msgString){
+    let target_conn = getConnectionForID(target_clientID);
+    if(target_conn){
+        target_conn.sendUTF(msgString);
     }
 }
 
-function getConnectionForID(id){
+function getConnectionForID(target_clientID){
     let connect = null;
     let i;
 
     for(i = 0; i < connectionArray.length; i++){
-        if(connectionArray[i].clientID === id){
+        if(connectionArray[i].clientID === target_clientID){
             connect = connectionArray[i];
             break;
         }
@@ -57,73 +51,14 @@ function getConnectionForID(id){
     return connect;
 }
 
-
-function makeUserListMessage(){
-    let userListMsg = {
-        type: "userlist",
-        users: []
-    };
-
-    let i;
-
-    for(i = 0; i < connectionArray.length; i++){
-        userListMsg.users.push(connectionArray[i].username);
-    }
-    return userListMsg;
-}
-
-
-function sendUserListToAll(){
-    let userListMsg = makeUserListMessage();
-    let userListMsgStr = JSON.stringify(userListMsg);
-    let i;
-
-    for(i = 0; i < connectionArray.length; i++){
-        connectionArray[i].sendUTF(userListMsgStr);
-    }
-}
-
-var httpsOptions = {
-    key: fs.readFileSync("/Users/yuriy/create-react-app-master/conversations/mdn.key"),
-    cert: fs.readFileSync("/Users/yuriy/create-react-app-master/conversations/mdn.crt")
-};
-
-const app = express();
-var httpServer = http.createServer(app);
-var httpsServer = https.createServer(httpsOptions, app);
-
-
-
-app.get('/api/hello', (req, res) => {
-    console.log("sending response!");
-    res.send({express: 'Hello from Express!!'});
-});
-
-
-httpsServer.listen(5000, function(){
-    log("server is listening on port 5000")
-});
-
 var wsServer = new WebSocketServer({
-    httpServer: httpServer,
+    httpServer: httpsServer,
     autoAcceptConnections: false
 });
 
 wsServer.on('request', function(request){
 
     let connection = request.accept("json", request.origin);
-    log("Connection accepted from " + connection.remoteAddress + ".");
-
-    connectionArray.push(connection);
-
-    connection.clientID = nextID;
-    nextID++;
-
-    let msg = {
-        type: "id",
-        id: connection.clientID
-    };
-    connection.sendUTF(JSON.stringify(msg));
 
     connection.on('message', function(message){
         if(message.type === 'utf8'){
@@ -131,50 +66,45 @@ wsServer.on('request', function(request){
 
             let sendToClients = true;
             msg = JSON.parse(message.utf8Data);
-            let connect = getConnectionForID(msg.id);
+            let connect = getConnectionForID(msg.clientID);
 
             switch(msg.type){
-                case "message":
-                    msg.name = connect.username;
-                    msg.text = msg.text.replace(/(<([^>]+)>)/ig, "");
-                    break;
-                case "username":
-                    var nameChanged = false;
-                    var origName = msg.name;
+                    case "invite":
+                        console.log("received invite message, message: ", msg);
+                        debugger;
+                        log("Connection accepted from " + connection.remoteAddress + ".");
+                        connection.clientID = msg.clientID;
+                        connectionArray.push(connection);
 
-                    while(!isUsernameUnique(msg.name)){
-                        msg.name = origName + appendToMakeUnique;
-                        appendToMakeUnique++;
-                        nameChanged = true;
-                    }
 
-                    if(nameChanged){
-                        var changeMsg = {
-                            id: msg.id,
-                            type: "rejectusername",
-                            name: msg.name
-                        };
-                        connect.sendUTF(JSON.stringify(msg));
-                    };
+                        let target_queue = (msg.party === 'liberal') ? con_queue : lib_queue;
+                        if(!target_queue){
 
-                    connect.username = msg.name;
-                    sendUserListToAll();
-                    sendToClients = false;
-                    break;
+                            let target_queue = (msg.party === 'liberal') ? lib_queue : con_queue;
+                            target_queue.concat(connection);
+
+                            let msg = {
+                                type: "delay",
+                                message: "Please wait while we pair you with someone. This may take a minute."
+                            };
+
+                            sendToOneUser()
+                        }
+
             }
 
-            if(sendToClients){
-                let msgString = JSON.stringify(msg);
-                let i;
-
-                if (msg.target && msg.target !== undefined && msg.target.length !== 0) {
-                    sendToOneUser(msg.target, msgString);
-                } else {
-                    for (i=0; i<connectionArray.length; i++) {
-                        connectionArray[i].sendUTF(msgString);
-                    }
-                }
-            }
+            // if(sendToClients){
+            //     let msgString = JSON.stringify(msg);
+            //     let i;
+            //
+            //     if (msg.target && msg.target !== undefined && msg.target.length !== 0) {
+            //         sendToOneUser(msg.target, msgString);
+            //     } else {
+            //         for (i=0; i<connectionArray.length; i++) {
+            //             connectionArray[i].sendUTF(msgString);
+            //         }
+            //     }
+            // }
         }
     });
 
@@ -183,10 +113,6 @@ wsServer.on('request', function(request){
         connectionArray = connectionArray.filter(function(el, idx, ar) {
             return el.connected;
         });
-
-        // Now send the updated user list. Again, please don't do this in a
-        // real application. Your users won't like you very much.
-        sendUserListToAll();
 
         // Build and output log output for close information.
 
