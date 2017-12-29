@@ -6,11 +6,11 @@ import './App.css';
 class App extends Component {
 
 
-    state = {
+  state = {
         response: ''
     };
 
-    componentDidMount() {
+  componentDidMount() {
         this.callApi()
             .then(res => this.setState({ response: res.express }))
             .catch(err => console.log(err));
@@ -28,18 +28,12 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-          <p className="App-intro">{this.state.response}</p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <h1 className="App-title">Welcome to Conversations</h1>
+          {/*<p className="App-intro">{this.state.response}</p>*/}
         </header>
+        <div className=form_example>
+            <FormExample/>
+        </div>
       </div>
     );
   }
