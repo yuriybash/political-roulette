@@ -28,12 +28,9 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Welcome to Conversations</h1>
+          <h1 className="App-title">Conversations</h1>
           {/*<p className="App-intro">{this.state.response}</p>*/}
         </header>
-        <div className=form_example>
-            <FormExample/>
-        </div>
       </div>
     );
   }
