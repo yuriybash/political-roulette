@@ -5,15 +5,19 @@ import { PageHeader } from 'reactstrap';
 
 class UserSelection extends React.Component {
 
-    test(){
-        alert("works!");
+    liberal(){
+        alert("liberal");
+    }
+
+    conservative(){
+        alert("conservative");
     }
 
     render() {
         return (
             <div>
-                <Button onClick={this.test} outline color="primary">I'M A LIBERAL, BRING ME A CONSERVATIVE!</Button>{' '}
-                <Button onClick={this.test} outline color="primary">I'M A CONSERVATIVE, BRING ME A LIBERAL!</Button>{' '}
+                <Button onClick={this.liberal} outline color="primary">I'M A LIBERAL, BRING ME A CONSERVATIVE!</Button>{' '}
+                <Button onClick={this.conservative} outline color="primary">I'M A CONSERVATIVE, BRING ME A LIBERAL!</Button>{' '}
             </div>
         );
     }
