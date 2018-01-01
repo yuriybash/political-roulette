@@ -1,6 +1,23 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Button } from 'reactstrap';
+import { PageHeader } from 'reactstrap';
+
+class UserSelection extends React.Component {
+
+    test(){
+        alert("works!");
+    }
+
+    render() {
+        return (
+            <div>
+                <Button onClick={this.test} outline color="primary">I'M A LIBERAL, BRING ME A CONSERVATIVE!</Button>{' '}
+                <Button onClick={this.test} outline color="primary">I'M A CONSERVATIVE, BRING ME A LIBERAL!</Button>{' '}
+            </div>
+        );
+    }
+}
 
 
 class App extends Component {
@@ -29,8 +46,10 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Conversations</h1>
-          {/*<p className="App-intro">{this.state.response}</p>*/}
         </header>
+          <div className="user_selection">
+              <UserSelection/>
+          </div>
       </div>
     );
   }
