@@ -5,13 +5,17 @@ import { PageHeader } from 'reactstrap';
 
 class Video extends React.Component{
 
+    hangUpCall(){
+        console.log("hanging up")
+    };
+
     render() {
         return (
             <div className="flexChild" id="camera-container">
                 <div className="camera-box">
                     <video id="received_video" autoPlay></video>
                     <video id="local_video" autoPlay muted></video>
-                    <button id="hangup-button" onClick="hangUpCall();" disabled>
+                    <button id="hangup-button" onClick={this.hangUpCall} disabled>
                         Hang Up
                     </button>
                 </div>
@@ -33,40 +37,25 @@ class UserSelection extends React.Component {
     }
 }
 
-
 class App extends Component {
 
 
   state = {
         response: '',
-        isHidden: false
+        isHidden: false,
+        videoIsHidden: true
     };
 
   toggleHidden(){
       this.setState({
-          isHidden: !this.state.isHidden
+          isHidden: !this.state.isHidden,
+          videoIsHidden: !this.state.videoIsHidden
       });
   }
-
 
   startCall(party){
       this.toggleHidden();
       console.log("starting call for party: ", party);
-  };
-
-
-  // componentDidMount() {
-  //       this.callApi()
-  //           .then(res => this.setState({ response: res.express }))
-  //           .catch(err => console.log(err));
-  //   }
-
-
-  callApi = async(endpoint) => {
-    const response = await fetch(endpoint);
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    return body;
   };
 
   render() {
@@ -77,6 +66,9 @@ class App extends Component {
         </header>
           <div className="user_selection">
               {!this.state.isHidden && <UserSelection onClick={(party) => this.startCall(party)}/>}
+          </div>
+          <div className="video">
+              {!this.state.videoIsHidden && <Video/>}
           </div>
       </div>
     );
