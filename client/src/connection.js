@@ -240,6 +240,7 @@ function handleVideoOfferMsg(msg) {
     let localStream = null;
 
     offerer_clientID = msg.clientID;
+    console.log("in handleVideoOfferMsg, current handleVideoOfferMsg is: ", handleVideoOfferMsg);
 
     // Call createPeerConnection() to create the RTCPeerConnection.
 
