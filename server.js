@@ -97,7 +97,7 @@ wsServer.on('request', function(request){
                         sendToOneUser(connection.clientID, JSON.stringify(outgoing_msg));
                         break;
                 default:
-                    console.log("sending message from: ", msg.clientID, " and sending it to: ", msg.target);
+                    console.log("sending message from: ", msg.clientID, " and sending it to: ", msg.target, ", msg: ", msg);
                     sendToOneUser(msg.target, JSON.stringify(msg));
             }
 
