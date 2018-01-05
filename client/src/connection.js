@@ -241,6 +241,7 @@ function handleVideoOfferMsg(msg) {
 
     offerer_clientID = msg.clientID;
     console.log("in handleVideoOfferMsg, current targetClientID is: ", targetClientID);
+    targetClientID = msg.clientID;
 
     // Call createPeerConnection() to create the RTCPeerConnection.
 
