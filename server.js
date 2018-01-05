@@ -59,6 +59,7 @@ wsServer.on('request', function(request){
     let connection = request.accept("json", request.origin);
 
     connection.on('message', function(message){
+        console.log("websocket message received: ", message);
         if(message.type === 'utf8'){
             let msg = JSON.parse(message.utf8Data);
             switch(msg.type){
