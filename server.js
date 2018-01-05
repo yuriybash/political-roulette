@@ -3,6 +3,7 @@ const path = require('path');
 var http = require('http');
 var WebSocketServer = require('websocket').server;
 
+console.log("process.env.PORT: ", process.env.PORT);
 const app = express();
 const port = process.env.PORT || 5000;
 var httpServer = http.createServer(app);
