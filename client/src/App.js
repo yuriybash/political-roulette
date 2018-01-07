@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './App.css';
-import { Button } from 'reactstrap';
-import { PageHeader } from 'reactstrap';
+import {Button, PageHeader} from 'reactstrap';
 import ReactLoading from 'react-loading';
+import {log, log_error, reportError} from "./util";
 
 const uuidv4 = require('uuid/v4');
 
@@ -48,22 +48,6 @@ END WEBSOCKET-RELATED VARS
 
 
 
-/* START WSS CODE */
-function log(text) {
-    var time = new Date();
-    console.log("[" + time.toLocaleTimeString() + "] " + text);
-}
-
-function log_error(text) {
-    var time = new Date();
-
-    console.error("[" + time.toLocaleTimeString() + "] " + text);
-}
-
-function reportError(errMessage) {
-    log_error("Error " + errMessage.name + ": " + errMessage.message);
-}
-
 function connect(party, on_delay, on_call_start) {
 
     var serverUrl;
@@ -72,10 +56,8 @@ function connect(party, on_delay, on_call_start) {
     serverUrl = scheme + "://" + myHostname + ":6503";
     connection = new WebSocket(serverUrl, "json");
     connection.onopen = function(evt) {
-        console.log("opened websocket connection");
 
         myUsername = clientID = uuidv4();
-        log("set username and clientID to: " + myUsername);
 
         sendToServer({
             type: "invite",
@@ -89,25 +71,15 @@ function connect(party, on_delay, on_call_start) {
 
     connection.onmessage = function(evt) {
 
-        console.log("received message via websockets");
-
-        console.log("evt: ", evt);
-        var msg = JSON.parse(evt.data);
-        log("message received: " + msg);
+        let msg = JSON.parse(evt.data);
 
         switch(msg.type) {
-            // case "id":
-            //     clientID = msg.id;
-            //     // setUsername();
-            //     break;
 
             case "delay":
-                console.log("sorry, you have to wait!");
                 on_delay();
                 break;
 
             case "peer_info":
-                console.log("peer info received, my clientID: ", clientID, " peer clientID: ", msg.peer_clientID);
                 targetClientID = msg.peer_clientID;
                 on_call_start();
                 createPeerConnection();
@@ -153,9 +125,8 @@ function connect(party, on_delay, on_call_start) {
             // Unknown message; output to console for debugging.
 
             default:
-                console.log("error, unknown message received client-side");
-                // log_error("Unknown message received:");
-                // log_error(msg);
+                log_error("Unknown message received:");
+                log_error(msg);
         }
 
     };
@@ -402,8 +373,8 @@ function handleHangUpMsg(msg) {
 
 
 function closeVideoCall() {
-    var remoteVideo = document.getElementById("received_video");
-    var localVideo = document.getElementById("local_video");
+    let remoteVideo = document.getElementById("received_video");
+    let localVideo = document.getElementById("local_video");
 
     log("Closing the call");
 
@@ -453,7 +424,6 @@ function closeVideoCall() {
 
 function sendToServer(msg) {
     let msgJSON = JSON.stringify(msg);
-    console.log("Sending '" + msg.type + "' message: " + msgJSON);
     connection.send(msgJSON);
 }
 
