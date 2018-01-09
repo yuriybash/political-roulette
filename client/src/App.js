@@ -31,7 +31,7 @@ class Delay extends React.Component {
     render() {
         return (
             <div>
-                <h3 className="please_wait">Please wait, looking for a conservative</h3>
+                <h3 className="please_wait">Please wait, looking for a {this.props.opposite_party}</h3>
                 <ReactLoading type="cylon" color="white" height={'60%'} width={'60%'} />
             </div>
         )
@@ -55,7 +55,8 @@ class App extends Component {
     state = {
         selectorIsHidden: false,
         videoIsHidden: true,
-        delayIsHidden: true
+        delayIsHidden: true,
+        party: null
     };
 
     on_delay(){
@@ -81,8 +82,16 @@ class App extends Component {
   }
 
   startCall(party){
+      this.setState({
+          party: party,
+          opposite_party: (party === 'liberal') ? 'conservative' : 'liberal'
+      });
       this.toggleSelector();
-      connect(party, this.on_delay.bind(this), this.on_call_start.bind(this));
+      try {
+          connect(party, this.on_delay.bind(this), this.on_call_start.bind(this));
+      } catch (e) {
+          console.log("Sorry, connection problems - please try again later.");
+      }
   };
 
   render() {
@@ -98,7 +107,7 @@ class App extends Component {
               {!this.state.videoIsHidden && <Video/>}
           </div>
           <div className="delay">
-              {!this.state.delayIsHidden && <Delay/>}
+              {!this.state.delayIsHidden && <Delay opposite_party={this.state.opposite_party}/>}
           </div>
       </div>
     );
