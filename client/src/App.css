@@ -43,16 +43,26 @@ root,
   margin: 1.5% 2.5% 2.5% 2.5%;
 }
 
-video{
-  padding: 5vh;
+
+.video{
+  padding-left: 10%;
 }
 
 #received_video {
-  width: 35%;
+  width: 55%;
+}
+
+.camera_box {
+  margin: 0 auto;
 }
 
 #local_video {
-  width: 25%;
+  width: 10%;
+}
+
+video {
+  padding: 1%;
+  margin: 1%;
 }
 
 .instructions {

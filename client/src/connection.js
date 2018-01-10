@@ -145,7 +145,7 @@ function handleICECandidateEvent(event) {
 function handleTrackEvent(event) {
     log("*** Track event");
     document.getElementById("received_video").srcObject = event.streams[0];
-    document.getElementById("hangup-button").disabled = false;
+    // document.getElementById("hangup-button").disabled = false;
 }
 
 function handleNegotiationNeededEvent() {
@@ -373,7 +373,7 @@ function closeVideoCall() {
 
     // Disable the hangup button
 
-    document.getElementById("hangup-button").disabled = true;
+    // document.getElementById("hangup-button").disabled = true;
 
     targetClientID = offerer_clientID = null;
 }

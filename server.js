@@ -34,7 +34,6 @@ function originIsAllowed(origin){
 function sendToOneUser(target_clientID, msgString){
     let target_conn = getConnectionForID(target_clientID);
     if(target_conn){
-        log('sending');
         target_conn.sendUTF(msgString);
     }
 }
@@ -64,8 +63,6 @@ wsServer.on('request', function(request){
 
     connection.on('message', function(message){
         if(message.type === 'utf8'){
-            log("Received Message: " + message.utf8Data);
-
             let msg = JSON.parse(message.utf8Data);
             switch(msg.type){
                     case "invite":

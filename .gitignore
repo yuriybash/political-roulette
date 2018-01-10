@@ -33,3 +33,4 @@ yarn-error.log*
 
 *.crt
 *.key
+tree_path

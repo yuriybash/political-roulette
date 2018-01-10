@@ -16,9 +16,9 @@ class Video extends React.Component{
                 <div className="camera-box">
                     <video id="received_video" autoPlay></video>
                     <video id="local_video" autoPlay muted></video>
-                    <button id="hangup-button" onClick={this.hangUpCall} disabled>
-                        Hang Up
-                    </button>
+                    {/*<button id="hangup-button" onClick={this.hangUpCall} disabled>*/}
+                        {/*End Call*/}
+                    {/*</button>*/}
                 </div>
             </div>
         )
