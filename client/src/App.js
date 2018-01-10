@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import {Button, Alert} from 'reactstrap';
+import {Alert, Button, Jumbotron} from 'reactstrap';
 import ReactLoading from 'react-loading';
 import {connect} from "./connection";
 
@@ -43,6 +43,9 @@ class UserSelection extends React.Component {
     render() {
         return (
             <div>
+                <p className="instructions" color="white">
+                        Talk to the other side. Choose your party below to start.
+                </p>
                 <Button onClick={this.props.onClick.bind(this, "liberal")} outline color="primary">I'M A LIBERAL, BRING ME A CONSERVATIVE!</Button>{' '}
                 <Button onClick={this.props.onClick.bind(this, "conservative")} outline color="primary">I'M A CONSERVATIVE, BRING ME A LIBERAL!</Button>{' '}
             </div>
