@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import {Alert, Button, Jumbotron} from 'reactstrap';
+import {Alert, Button} from 'reactstrap';
 import ReactLoading from 'react-loading';
 import {connect} from "./connection";
 
@@ -31,8 +31,8 @@ class Delay extends React.Component {
     render() {
         return (
             <div>
-                <h3 className="please_wait">Please wait, looking for a {this.props.opposite_party}</h3>
-                <ReactLoading type="cylon" color="white" height={'60%'} width={'60%'} />
+                <h3 className="loading">Please wait, looking for a {this.props.opposite_party}...</h3>
+                <ReactLoading className="spinner" type="spin" color="white"/>
             </div>
         )
     }

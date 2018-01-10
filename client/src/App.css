@@ -47,21 +47,6 @@ root,
   margin: 6vh 3vh 3vh;
 }
 
-.delay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 45%;
-  margin-left: 24vh;
-}
-
-.please_wait {
-  color: white;
-  margin-right: 40vh;
-  margin-top: 30vh;
-}
-
 video{
   padding: 5vh;
 }
@@ -74,14 +59,20 @@ video{
   width: 25%;
 }
 
-.jumbotron {
-  padding: 4vh;
-  max-width: 60vh;
-  /*margin: 0 -50% 0 30%;*/
-}
-
 .instructions {
   color:white;
   font-size: 3.4vh;
   margin-top: -5vh;
+}
+
+.loading {
+  color: white;
+}
+
+.spinner{
+  display:block;
+  margin:auto;
+  margin-top:2.5%;
+  min-height: 12.5%;
+  min-width: 12.5%;
 }
