@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import {Button} from 'reactstrap';
+import {Button, Alert} from 'reactstrap';
 import ReactLoading from 'react-loading';
 import {connect} from "./connection";
 
@@ -50,12 +50,24 @@ class UserSelection extends React.Component {
     }
 }
 
+class Error extends React.Component {
+
+    render() {
+        return (
+            <Alert bsStyle="warning">
+                <strong>Error!</strong> Sorry, experiencing some connection problems - please try again soon.
+            </Alert>
+        );
+    }
+}
+
 class App extends Component {
 
     state = {
         selectorIsHidden: false,
         videoIsHidden: true,
         delayIsHidden: true,
+        errorIsHidden: true,
         party: null
     };
 
@@ -63,34 +75,38 @@ class App extends Component {
       this.setState({
           selectorIsHidden: true,
           videoIsHidden: true,
-          delayIsHidden: false
+          delayIsHidden: false,
+          errorIsHidden: true
       })
   };
 
-  on_call_start(){
+  on_call(){
       this.setState({
           selectorIsHidden: true,
           videoIsHidden: false,
-          delayIsHidden: true
+          delayIsHidden: true,
+          errorIsHidden: true
       })
   };
 
-  toggleSelector(){
+  on_error(){
       this.setState({
-          selectorIsHidden: !this.state.selectorIsHidden,
-      });
-  }
+          selectorIsHidden: true,
+          videoIsHidden: true,
+          delayIsHidden: true,
+          errorIsHidden: false
+      })
+  };
 
   startCall(party){
       this.setState({
           party: party,
           opposite_party: (party === 'liberal') ? 'conservative' : 'liberal'
       });
-      this.toggleSelector();
       try {
-          connect(party, this.on_delay.bind(this), this.on_call_start.bind(this));
+          connect(party, this.on_delay.bind(this), this.on_call.bind(this));
       } catch (e) {
-          console.log("Sorry, connection problems - please try again later.");
+          this.on_error();
       }
   };
 
@@ -108,6 +124,9 @@ class App extends Component {
           </div>
           <div className="delay">
               {!this.state.delayIsHidden && <Delay opposite_party={this.state.opposite_party}/>}
+          </div>
+          <div className="error">
+              {!this.state.errorIsHidden && <Error/>}
           </div>
       </div>
     );

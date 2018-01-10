@@ -18,8 +18,8 @@ var myHostname = window.location.hostname;
 
 export function connect(party, on_delay, on_call_start) {
 
-    var serverUrl;
-    var scheme = "wss";
+    let serverUrl;
+    let scheme = "wss";
 
     serverUrl = scheme + "://" + myHostname + ":6503";
     connection = new WebSocket(serverUrl, "json");
