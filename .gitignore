@@ -34,3 +34,6 @@ yarn-error.log*
 *.crt
 *.key
 tree_path
+
+*.pem
+client/build
