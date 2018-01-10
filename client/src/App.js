@@ -118,8 +118,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Conversations</h1>
-        </header>
-          <div className="user_selection">
+        </header> <div className="user_selection">
               {!this.state.selectorIsHidden && <UserSelection onClick={(party) => this.startCall(party)}/>}
           </div>
           <div className="video">

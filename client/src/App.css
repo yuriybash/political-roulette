@@ -20,7 +20,7 @@ root,
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  margin-bottom: 5%;
+  margin-bottom: 1.5%;
 }
 
 .App-link {
@@ -35,18 +35,12 @@ root,
 }
 
 .user_selection {
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width:100%;
-  margin-top: 5%;
 }
 
 .btn {
   font-size: 28px;
   padding: 5%;
-  margin: 2.5% 3vh 3vh;
+  margin: 1.5% 2.5% 2.5% 2.5%;
 }
 
 video{
