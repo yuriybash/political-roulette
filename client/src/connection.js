@@ -19,9 +19,9 @@ var myHostname = window.location.hostname;
 export function connect(party, on_delay, on_call_start) {
 
     let serverUrl;
-    let scheme = "wss";
+    let scheme = ('https:' === document.location.protocol) ? 'wss' : 'ws';
 
-    serverUrl = scheme + "://" + myHostname + ":6503";
+    serverUrl = scheme + "://" + myHostname + ":5000";
     connection = new WebSocket(serverUrl, "json");
     connection.onopen = function (evt) {
 

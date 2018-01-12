@@ -1,21 +1,12 @@
 const express = require('express');
 var http = require('http');
-var https = require('https');
-var url = require('url');
-var fs = require('fs');
 var WebSocketServer = require('websocket').server;
 
-var httpsOptions = {
-    key: fs.readFileSync("/Users/yuriy/create-react-app-master/conversations/key.pem"),
-    cert: fs.readFileSync("/Users/yuriy/create-react-app-master/conversations/cert.pem")
-};
-
 const app = express();
-var httpsServer = https.createServer(httpsOptions, app);
-
-
-httpsServer.listen(6503, function(){
-    log("server is listening on port 6503")
+const port = process.env.PORT || 5000;
+var httpServer = http.createServer(app);
+httpServer.listen(port, function(){
+    log("server is listening on port " + port)
 });
 
 var connectionArray = [];
@@ -25,10 +16,6 @@ var con_queue = [];
 function log(text){
     let time = new Date();
     console.log("[" + time.toLocaleTimeString() + "] " + text);
-}
-
-function originIsAllowed(origin){
-    return true;
 }
 
 function sendToOneUser(target_clientID, msgString){
@@ -53,7 +40,7 @@ function getConnectionForID(target_clientID){
 }
 
 var wsServer = new WebSocketServer({
-    httpServer: httpsServer,
+    httpServer: httpServer,
     autoAcceptConnections: false
 });
 
