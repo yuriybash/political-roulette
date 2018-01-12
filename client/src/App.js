@@ -74,7 +74,8 @@ class App extends Component {
         party: null
     };
 
-    on_delay(){
+  on_delay(){
+      console.log("in on_delay");
       this.setState({
           selectorIsHidden: true,
           videoIsHidden: true,
@@ -84,6 +85,8 @@ class App extends Component {
   };
 
   on_call(){
+      console.log("in on_call");
+
       this.setState({
           selectorIsHidden: true,
           videoIsHidden: false,
@@ -92,7 +95,9 @@ class App extends Component {
       })
   };
 
-  on_error(){
+  on_error(e){
+      console.log("in on_error, error: ", e);
+
       this.setState({
           selectorIsHidden: true,
           videoIsHidden: true,
@@ -102,6 +107,7 @@ class App extends Component {
   };
 
   startCall(party){
+      console.log("starting call");
       this.setState({
           party: party,
           opposite_party: (party === 'liberal') ? 'conservative' : 'liberal'
@@ -109,7 +115,7 @@ class App extends Component {
       try {
           connect(party, this.on_delay.bind(this), this.on_call.bind(this));
       } catch (e) {
-          this.on_error();
+          this.on_error(e);
       }
   };
 

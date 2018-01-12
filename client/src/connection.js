@@ -18,6 +18,8 @@ var myHostname = window.location.hostname;
 
 export function connect(party, on_delay, on_call_start) {
 
+    console.log("in connect function");
+
     let serverUrl;
     let scheme = ('https:' === document.location.protocol) ? 'wss' : 'ws';
 
