@@ -5,6 +5,14 @@ var WebSocketServer = require('websocket').server;
 const app = express();
 const port = process.env.PORT || 5000;
 var httpServer = http.createServer(app);
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, 'client/build')));
+    app.get('*', function(req, res) {
+        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+}
+
 httpServer.listen(port, function(){
     log("server is listening on port " + port)
 });
