@@ -192,6 +192,8 @@ function handleICEConnectionStateChangeEvent(event) {
         case "disconnected":
             closeVideoCall();
             break;
+        default:
+            break;
     }
 }
 
@@ -204,6 +206,8 @@ function handleSignalingStateChangeEvent(event) {
     switch (myPeerConnection.signalingState) {
         case "closed":
             closeVideoCall();
+            break;
+        default:
             break;
     }
 }
@@ -260,7 +264,8 @@ function handleVideoOfferMsg(msg) {
         .then(function (stream) {
             log("-- Local video stream obtained");
             localStream = stream;
-            document.getElementById("local_video").src = window.URL.createObjectURL(localStream);
+            // document.getElementById("local_video").src = window.URL.createObjectURL(localStream);
+            // document.getElementById("local_video").srcObject = localStream;
             document.getElementById("local_video").srcObject = localStream;
 
             if (hasAddTrack) {
