@@ -44,9 +44,14 @@ class UserSelection extends React.Component {
         return (
             <div>
                 <p className="instructions" color="white">
-                        Talk to the other side. Choose your party below to start.
+                    <span className="line" style={{marginRight: '0.25em'}}>Talk to the other side.</span>
+                    <span className="line"> Choose your party below to start. </span>
+
                 </p>
-                <Button onClick={this.props.onClick.bind(this, "liberal")} outline color="primary">I'M A LIBERAL, BRING ME A CONSERVATIVE!</Button>{' '}
+                <Button className="outer_button" onClick={this.props.onClick.bind(this, "liberal")} outline color="primary">
+                    <span className="line" style={{marginRight: '0.25em'}}>I'M A LIBERAL,</span>
+                    <span className="line">BRING ME A CONSERVATIVE!</span>
+                </Button>{' '}
                 <Button onClick={this.props.onClick.bind(this, "conservative")} outline color="primary">I'M A CONSERVATIVE, BRING ME A LIBERAL!</Button>{' '}
             </div>
         );
