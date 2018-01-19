@@ -153,55 +153,55 @@ function handleTrackEvent(event) {
 async function handleNegotiationNeededEvent() {
     log("*** Negotiation needed");
     log("in handleNegotiationNeededEvent, current state: " + myPeerConnection.signalingState);
-    //
-    // if (myPeerConnection._negotiating == true) return;
-    // log("*** Negotiation needed");
-    // myPeerConnection._negotiating = true;
-    // try {
-    //     log("---> Creating offer");
-    //     const offer = await myPeerConnection.createOffer();
-    //
-    //     log("---> Creating new description object to send to remote peer");
-    //     await myPeerConnection.setLocalDescription(offer);
-    //
-    //     log("---> Sending offer to remote peer");
-    //     sendToServer({
-    //         type: "video-offer",
-    //         target: targetClientID,
-    //         name: myUsername,
-    //         sdp: myPeerConnection.localDescription,
-    //         username: myUsername,
-    //         hostname: myHostname,
-    //         clientID: clientID,
-    //         party: party,
-    //     });
-    // } catch (e) {
-    //     reportError(e)
-    // } finally {
-    //     myPeerConnection._negotiating = false;
-    // }
-    //
 
+    if (myPeerConnection._negotiating == true) return;
+    log("*** Negotiation needed");
+    myPeerConnection._negotiating = true;
+    try {
+        log("---> Creating offer");
+        const offer = await myPeerConnection.createOffer();
 
-    log("---> Creating offer");
-    myPeerConnection.createOffer().then(function (offer) {
         log("---> Creating new description object to send to remote peer");
-        return myPeerConnection.setLocalDescription(offer);
-    })
-        .then(function () {
-            log("---> Sending offer to remote peer");
-            sendToServer({
-                type: "video-offer",
-                target: targetClientID,
-                name: myUsername,
-                sdp: myPeerConnection.localDescription,
-                username: myUsername,
-                hostname: myHostname,
-                clientID: clientID,
-                party: party,
-            });
-        })
-        .catch(reportError);
+        await myPeerConnection.setLocalDescription(offer);
+
+        log("---> Sending offer to remote peer");
+        sendToServer({
+            type: "video-offer",
+            target: targetClientID,
+            name: myUsername,
+            sdp: myPeerConnection.localDescription,
+            username: myUsername,
+            hostname: myHostname,
+            clientID: clientID,
+            party: party,
+        });
+    } catch (e) {
+        reportError(e)
+    } finally {
+        myPeerConnection._negotiating = false;
+    }
+
+    //
+    //
+    // log("---> Creating offer");
+    // myPeerConnection.createOffer().then(function (offer) {
+    //     log("---> Creating new description object to send to remote peer");
+    //     return myPeerConnection.setLocalDescription(offer);
+    // })
+    //     .then(function () {
+    //         log("---> Sending offer to remote peer");
+    //         sendToServer({
+    //             type: "video-offer",
+    //             target: targetClientID,
+    //             name: myUsername,
+    //             sdp: myPeerConnection.localDescription,
+    //             username: myUsername,
+    //             hostname: myHostname,
+    //             clientID: clientID,
+    //             party: party,
+    //         });
+    //     })
+    //     .catch(reportError);
 }
 
 function handleRemoveTrackEvent(event) {
