@@ -184,7 +184,6 @@ async function handleNegotiationNeededEvent() {
 
 
 
-
     // log("---> Creating offer");
     // myPeerConnection.createOffer().then(function (offer) {
     //     log("---> Creating new description object to send to remote peer");
