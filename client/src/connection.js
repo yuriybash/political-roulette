@@ -28,6 +28,7 @@ export function connect(party, on_delay, on_call_start) {
     connection.onopen = function (evt) {
 
         myUsername = clientID = uuidv4();
+        console.log("myUsername/clientID is: " + myUsername);
 
         sendToServer({
             type: "invite",
