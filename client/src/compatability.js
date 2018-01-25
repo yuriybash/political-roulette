@@ -1,5 +1,6 @@
-export function test_compatability(){
-    test_mobile()
+export function test_compatibility(){
+    test_mobile();
+    test_webrtc_support();
 }
 
 function test_mobile(){
@@ -8,3 +9,8 @@ function test_mobile(){
     }
 }
 
+function test_webrtc_support(){
+    if(!navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+        throw "Sorry, your browser doesn't support WebRTC - please try again with a compatibile browser."
+    }
+}
