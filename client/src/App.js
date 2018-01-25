@@ -117,11 +117,23 @@ class App extends Component {
           opposite_party: (party === 'liberal') ? 'conservative' : 'liberal'
       });
       try {
-          connect(party, this.on_delay.bind(this), this.on_call.bind(this));
+          connect(party, this.on_delay.bind(this), this.on_call.bind(this), this.endCall.bind(this));
       } catch (e) {
           this.on_error(e);
       }
   };
+
+  endCall(){
+      alert("Your partner disconnected the call");
+      this.setState({
+          party: null,
+          opposite_party: null,
+          selectorIsHidden: false,
+          videoIsHidden: true,
+          delayIsHidden: true,
+          errorIsHidden: true
+      });
+  }
 
   render() {
     return (

@@ -1,5 +1,6 @@
 import {log, log_error, reportError} from "./util";
 import {test_compatibility} from "./compatability";
+import _ from 'lodash'
 
 const uuidv4 = require('uuid/v4');
 var connection = null;
@@ -17,14 +18,14 @@ var hasAddTrack = false;
 var myHostname = window.location.hostname;
 
 
-export function connect(party, on_delay, on_call_start) {
+export function connect(party, on_delay, on_call_start, on_call_end) {
 
     test_compatibility();
 
     let serverUrl;
     let scheme = ('https:' === document.location.protocol) ? 'wss' : 'ws';
 
-    serverUrl = scheme + "://" + myHostname;
+    serverUrl = scheme + "://" + myHostname + ":5000";
     connection = new WebSocket(serverUrl, "json");
     connection.onopen = function (evt) {
 
@@ -54,7 +55,7 @@ export function connect(party, on_delay, on_call_start) {
             case "peer_info":
                 targetClientID = msg.peer_clientID;
                 on_call_start();
-                createPeerConnection();
+                createPeerConnection(on_call_end);
 
                 navigator.mediaDevices.getUserMedia(mediaConstraints)
                     .then(function (localStream) {
@@ -79,7 +80,7 @@ export function connect(party, on_delay, on_call_start) {
 
             case "video-offer":  // Invitation and offer to chat
                 on_call_start();
-                handleVideoOfferMsg(msg);
+                handleVideoOfferMsg(msg, on_call_end);
                 break;
 
             case "video-answer":  // Callee has answered our offer
@@ -91,7 +92,10 @@ export function connect(party, on_delay, on_call_start) {
                 break;
 
             case "hang-up": // The other peer has hung up the call
-                handleHangUpMsg(msg);
+
+                console.log("received hang-up message");
+
+                handleHangUpMsg(msg, on_call_end);
                 break;
 
             // Unknown message; output to console for debugging.
@@ -104,7 +108,7 @@ export function connect(party, on_delay, on_call_start) {
     };
 }
 
-function createPeerConnection() {
+function createPeerConnection(on_call_end) {
 
     myPeerConnection = new RTCPeerConnection({
         iceServers: [{
@@ -117,10 +121,13 @@ function createPeerConnection() {
     myPeerConnection.onicecandidate = handleICECandidateEvent;
     myPeerConnection.ontrack = handleTrackEvent;
     myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
-    myPeerConnection.onremovetrack = handleRemoveTrackEvent;
-    myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
+    // myPeerConnection.onremovetrack = handleRemoveTrackEvent;
+    myPeerConnection.onremovetrack = _.bind(handleRemoveTrackEvent, null, _, on_call_end);
+    // myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
+    myPeerConnection.oniceconnectionstatechange = _.bind(handleICEConnectionStateChangeEvent, null, _, on_call_end);
     myPeerConnection.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
-    myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
+    // myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
+    myPeerConnection.onsignalingstatechange =  _.bind(handleSignalingStateChangeEvent, null, _, on_call_end);
 
     if (hasAddTrack) {
         myPeerConnection.ontrack = handleTrackEvent;
@@ -206,23 +213,23 @@ async function handleNegotiationNeededEvent() {
     //     .catch(reportError);
 }
 
-function handleRemoveTrackEvent(event) {
+function handleRemoveTrackEvent(event, on_call_end) {
     let stream = document.getElementById("received_video").srcObject;
     let trackList = stream.getTracks();
 
     if (trackList.length === 0) {
-        closeVideoCall();
+        closeVideoCall(on_call_end);
     }
 }
 
-function handleICEConnectionStateChangeEvent(event) {
+function handleICEConnectionStateChangeEvent(event, on_call_end) {
     log("*** ICE connection state changed to " + myPeerConnection.iceConnectionState);
 
     switch (myPeerConnection.iceConnectionState) {
         case "closed":
         case "failed":
         case "disconnected":
-            closeVideoCall();
+            closeVideoCall(on_call_end);
             break;
         default:
             break;
@@ -233,11 +240,11 @@ function handleICEGatheringStateChangeEvent(event) {
     log("*** ICE gathering state changed to: " + myPeerConnection.iceGatheringState);
 }
 
-function handleSignalingStateChangeEvent(event) {
+function handleSignalingStateChangeEvent(event, on_call_end) {
     log("*** WebRTC signaling state changed to: " + myPeerConnection.signalingState);
     switch (myPeerConnection.signalingState) {
         case "closed":
-            closeVideoCall();
+            closeVideoCall(on_call_end);
             break;
         default:
             break;
@@ -250,7 +257,7 @@ function handleAddStreamEvent(event) {
     document.getElementById("hangup-button").disabled = false;
 }
 
-function handleGetUserMediaError(e) {
+function handleGetUserMediaError(e, on_call_end) {
     log(e);
     switch (e.name) {
         case "NotFoundError":
@@ -269,10 +276,10 @@ function handleGetUserMediaError(e) {
     // Make sure we shut down our end of the RTCPeerConnection so we're
     // ready to try again.
 
-    closeVideoCall();
+    closeVideoCall(on_call_end);
 }
 
-function handleVideoOfferMsg(msg) {
+function handleVideoOfferMsg(msg, on_call_end) {
     let localStream = null;
 
     offerer_clientID = msg.clientID;
@@ -282,7 +289,7 @@ function handleVideoOfferMsg(msg) {
     // Call createPeerConnection() to create the RTCPeerConnection.
 
     log("Starting to accept invitation from " + offerer_clientID);
-    createPeerConnection();
+    createPeerConnection(on_call_end);
 
     // We need to set the remote description to the received SDP offer
     // so that our local WebRTC layer knows how to talk to the caller.
@@ -364,13 +371,14 @@ function handleNewICECandidateMsg(msg) {
         .catch(reportError);
 }
 
-function handleHangUpMsg(msg) {
+function handleHangUpMsg(msg, on_close) {
     log("*** Received hang up notification from other peer");
 
-    closeVideoCall();
+    // closeVideoCall();
+    closeVideoCall(on_close);
 }
 
-function closeVideoCall() {
+function closeVideoCall(on_close) {
     let remoteVideo = document.getElementById("received_video");
     let localVideo = document.getElementById("local_video");
 
@@ -417,6 +425,8 @@ function closeVideoCall() {
     // document.getElementById("hangup-button").disabled = true;
 
     targetClientID = offerer_clientID = null;
+
+    on_close()
 }
 
 function sendToServer(msg) {
