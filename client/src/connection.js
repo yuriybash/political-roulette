@@ -1,4 +1,5 @@
 import {log, log_error, reportError} from "./util";
+import {test_compatability} from "./compatability";
 
 const uuidv4 = require('uuid/v4');
 var connection = null;
@@ -18,7 +19,7 @@ var myHostname = window.location.hostname;
 
 export function connect(party, on_delay, on_call_start) {
 
-    console.log("in connect function");
+    test_compatability();
 
     let serverUrl;
     let scheme = ('https:' === document.location.protocol) ? 'wss' : 'ws';

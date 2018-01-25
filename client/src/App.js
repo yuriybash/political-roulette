@@ -62,8 +62,8 @@ class Error extends React.Component {
 
     render() {
         return (
-            <Alert bsStyle="warning">
-                <strong>Error!</strong> Sorry, experiencing some connection problems - please try again soon.
+            <Alert>
+                {this.props.error_message}
             </Alert>
         );
     }
@@ -101,13 +101,12 @@ class App extends Component {
   };
 
   on_error(e){
-      console.log("in on_error, error: ", e);
-
       this.setState({
           selectorIsHidden: true,
           videoIsHidden: true,
           delayIsHidden: true,
-          errorIsHidden: false
+          errorIsHidden: false,
+          error_message: e
       })
   };
 
@@ -139,7 +138,7 @@ class App extends Component {
               {!this.state.delayIsHidden && <Delay opposite_party={this.state.opposite_party}/>}
           </div>
           <div className="error">
-              {!this.state.errorIsHidden && <Error/>}
+              {!this.state.errorIsHidden && <Error error_message={this.state.error_message}/>}
           </div>
       </div>
     );
