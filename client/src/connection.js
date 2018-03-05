@@ -66,6 +66,7 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
         break;
 
       case 'video-offer':
+        test_compatibility();
         on_call_start();
         handleVideoOfferMsg(msg, on_call_end);
         break;
