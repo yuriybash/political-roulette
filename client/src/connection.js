@@ -309,9 +309,6 @@ export function closeVideoCall(on_close) {
   }
 
   targetClientID = offerer_clientID = null;
-  console.log("in connection.js, L314");
-  console.log("e: ", e);
-  console.log("on_close: ", on_close);
   on_close();
 }
 
