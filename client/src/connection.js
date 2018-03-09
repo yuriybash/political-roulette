@@ -212,6 +212,11 @@ function handleGetUserMediaError(e, on_call_end) {
       break;
   }
 
+  console.log("in handleGetUserMediaError, e: ");
+  console.log(e);
+  console.log("on_call_end: ");
+  console.log(on_call_end);
+
   closeVideoCall(on_call_end);
 }
 
