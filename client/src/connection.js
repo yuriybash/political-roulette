@@ -275,7 +275,7 @@ function handleHangUpMsg(msg, on_close) {
   closeVideoCall(on_close);
 }
 
-export function closeVideoCall(e, on_close) {
+export function closeVideoCall(on_close) {
 
   console.log("in beginning of closeVideoCall, e: ");
   console.log(e);
@@ -311,7 +311,7 @@ export function closeVideoCall(e, on_close) {
   }
 
   targetClientID = offerer_clientID = null;
-  console.log("in connection.js, L302");
+  console.log("in connection.js, L314");
   console.log("e: ", e);
   console.log("on_close: ", on_close);
   on_close();
