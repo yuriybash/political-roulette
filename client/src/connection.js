@@ -61,8 +61,8 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
             } else {
               myPeerConnection.addStream(localStream);
             }
-          })
-          .catch(handleGetUserMediaError);
+          });
+          // .catch(handleGetUserMediaError);
         break;
 
       case 'video-offer':
