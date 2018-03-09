@@ -270,6 +270,12 @@ function handleHangUpMsg(msg, on_close) {
 }
 
 export function closeVideoCall(e, on_close) {
+
+  console.log("in beginning of closeVideoCall, e: ");
+  console.log(e);
+  console.log("on_close: ");
+  console.log(on_close);
+
   const remoteVideo = document.getElementById('received_video');
   const localVideo = document.getElementById('local_video');
 
