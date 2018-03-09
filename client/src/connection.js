@@ -269,7 +269,7 @@ function handleHangUpMsg(msg, on_close) {
   closeVideoCall(on_close);
 }
 
-export function closeVideoCall(on_close) {
+export function closeVideoCall(e, on_close) {
   const remoteVideo = document.getElementById('received_video');
   const localVideo = document.getElementById('local_video');
 
@@ -299,7 +299,9 @@ export function closeVideoCall(on_close) {
   }
 
   targetClientID = offerer_clientID = null;
-
+  console.log("in connection.js, L302");
+  console.log("e: ", e);
+  console.log("on_close: ", on_close);
   on_close();
 }
 
