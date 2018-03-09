@@ -277,6 +277,7 @@ function handleHangUpMsg(msg, on_close) {
 
 export function closeVideoCall(on_close) {
 
+  
   console.log("in beginning of closeVideoCall, on_close");
   console.log(on_close);
 
