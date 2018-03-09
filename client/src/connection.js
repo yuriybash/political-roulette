@@ -250,7 +250,8 @@ function handleVideoOfferMsg(msg, on_call_end) {
 
       sendToServer(msg);
     })
-    .catch(handleGetUserMediaError);
+    .catch(_.bind(handleGetUserMediaError, null, _, on_call_end));
+    // .catch(handleGetUserMediaError);
 }
 
 function handleVideoAnswerMsg(msg) {
