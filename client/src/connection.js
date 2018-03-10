@@ -61,8 +61,8 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
             } else {
               myPeerConnection.addStream(localStream);
             }
-          });
-          // .catch(handleGetUserMediaError);
+          })
+          .catch(handleGetUserMediaError);
         break;
 
       case 'video-offer':
@@ -201,9 +201,9 @@ function handleGetUserMediaError(e, on_call_end) {
   log(e);
   switch (e.name) {
     case 'NotFoundError':
-      throw new Error('Unable to open your call because no camera and/or microphone'
+      alert('Unable to open your call because no camera and/or microphone'
                 + 'were found.');
-      // break;
+      break;
     case 'SecurityError':
     case 'PermissionDeniedError':
       break;
@@ -272,6 +272,7 @@ function handleNewICECandidateMsg(msg) {
 }
 
 function handleHangUpMsg(msg, on_close) {
+  alert("Your partner disconnected the call.");
   closeVideoCall(on_close);
 }
 

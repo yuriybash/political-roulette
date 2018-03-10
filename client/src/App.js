@@ -118,8 +118,8 @@ class App extends Component {
   }
 
   endCall(self = false) {
-    const text = (self === true) ? 'You' : 'Your partner';
-    alert(`${text} disconnected the call`);
+    // const text = (self === true) ? 'You' : 'Your partner';
+    // alert(`${text} disconnected the call`);
 
     this.setState({
       party: null,
