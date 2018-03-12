@@ -77,7 +77,9 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
         break;
 
       case 'new-ice-candidate':
-        handleNewICECandidateMsg(msg);
+        if(myPeerConnection){
+            handleNewICECandidateMsg(msg);
+        }
         break;
 
       case 'hang-up':
