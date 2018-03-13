@@ -62,7 +62,7 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
               myPeerConnection.addStream(localStream);
             }
           })
-          .catch(handleGetUserMediaError);
+          .catch(_.bind(handleGetUserMediaError, null, _, on_call_end));
         break;
 
       case 'video-offer':
