@@ -313,6 +313,14 @@ export function closeVideoCall(on_close) {
   }
 
   targetClientID = offerer_clientID = null;
+    sendToServer({
+        type: 'hang-up',
+        target: targetClientID,
+        name: myUsername,
+        username: myUsername,
+        hostname: myHostname,
+        clientID,
+    });
   on_close();
 }
 
