@@ -312,8 +312,7 @@ export function closeVideoCall(on_close) {
     myPeerConnection = null;
   }
 
-  targetClientID = offerer_clientID = null;
-    sendToServer({
+  sendToServer({
         type: 'hang-up',
         target: targetClientID,
         name: myUsername,
@@ -321,6 +320,7 @@ export function closeVideoCall(on_close) {
         hostname: myHostname,
         clientID,
     });
+  targetClientID = offerer_clientID = null;
   on_close();
 }
 
