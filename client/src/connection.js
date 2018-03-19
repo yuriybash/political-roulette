@@ -219,6 +219,15 @@ function handleGetUserMediaError(e, on_call_end) {
   console.log("on_call_end: ");
   console.log(on_call_end);
 
+  sendToServer({
+        type: 'hang-up',
+        target: targetClientID,
+        name: myUsername,
+        username: myUsername,
+        hostname: myHostname,
+        clientID,
+    });
+
   closeVideoCall(on_call_end);
 }
 
@@ -312,14 +321,7 @@ export function closeVideoCall(on_close) {
     myPeerConnection = null;
   }
 
-  sendToServer({
-        type: 'hang-up',
-        target: targetClientID,
-        name: myUsername,
-        username: myUsername,
-        hostname: myHostname,
-        clientID,
-    });
+
   targetClientID = offerer_clientID = null;
   on_close();
 }
