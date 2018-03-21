@@ -1,5 +1,4 @@
 export function test_compatibility(){
-    console.log("in compatibility");
     test_mobile();
     test_webrtc_support();
 }

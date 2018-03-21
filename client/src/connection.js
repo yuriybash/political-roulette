@@ -66,7 +66,6 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
         break;
 
       case 'video-offer':
-        console.log("in case video-offer");
         test_compatibility();
         on_call_start();
         handleVideoOfferMsg(msg, on_call_end);
@@ -214,11 +213,6 @@ function handleGetUserMediaError(e, on_call_end) {
       break;
   }
 
-  console.log("in handleGetUserMediaError, e: ");
-  console.log(e);
-  console.log("on_call_end: ");
-  console.log(on_call_end);
-
   sendToServer({
         type: 'hang-up',
         target: targetClientID,
@@ -288,10 +282,6 @@ function handleHangUpMsg(msg, on_close) {
 }
 
 export function closeVideoCall(on_close) {
-
-  
-  console.log("in beginning of closeVideoCall, on_close");
-  console.log(on_close);
 
   const remoteVideo = document.getElementById('received_video');
   const localVideo = document.getElementById('local_video');
