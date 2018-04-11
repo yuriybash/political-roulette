@@ -4,7 +4,10 @@ root,
 .App {
   text-align: center;
   height: 100%;
-  background-color: #282c34;
+}
+
+body {
+  background-image: linear-gradient(to bottom, #282c34, 70%, #415a8c);
 }
 
 .App-logo {
