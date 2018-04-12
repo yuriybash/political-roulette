@@ -118,8 +118,6 @@ class App extends Component {
   }
 
   endCall(self = false) {
-    // const text = (self === true) ? 'You' : 'Your partner';
-    // alert(`${text} disconnected the call`);
 
     this.setState({
       party: null,
@@ -135,7 +133,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Conversations</h1>
+          <h1 className="App-title">Political Roulette</h1>
         </header>
         {' '}
         <div className="user_selection">

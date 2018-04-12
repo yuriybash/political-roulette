@@ -1,5 +1,5 @@
 {
-  "name": "conversations",
+  "name": "political-roulette",
   "version": "1.0.0",
   "scripts": {
     "client": "cd client && yarn start",
