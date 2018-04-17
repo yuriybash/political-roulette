@@ -32,15 +32,8 @@ function handle_request(request){
                     connection.clientID = msg.clientID;
                     connectionArray.push(connection);
 
-
-
                     let target_queue = (msg.party === 'liberal') ? con_queue : lib_queue;
                     let outgoing_msg = {};
-
-                    console.log("connectionArray: ");
-                    console.log(connectionArray);
-                    console.log("target_queue: ");
-                    console.log(target_queue);
 
                     if(target_queue.length < 1){
 
