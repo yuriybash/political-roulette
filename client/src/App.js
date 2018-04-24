@@ -87,7 +87,6 @@ class App extends Component {
   }
 
   on_call() {
-    console.log("testing on_call");
     this.setState({
       selectorIsHidden: true,
       videoIsHidden: false,
