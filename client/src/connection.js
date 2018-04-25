@@ -41,6 +41,8 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
   connection.onmessage = function (evt) {
     const msg = JSON.parse(evt.data);
 
+    console.log("received socket message of type" + msg.type);
+
     switch (msg.type) {
       case 'delay':
         on_delay();
