@@ -166,6 +166,7 @@ function handleRemoveTrackEvent(event, on_call_end) {
   const trackList = stream.getTracks();
 
   if (trackList.length === 0) {
+    console.log("I suspect your partner disconnected the call, but you did not");
     closeVideoCall(on_call_end);
   }
 }
