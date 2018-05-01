@@ -123,7 +123,7 @@ class App extends Component {
 
   endCall(self = false) {
 
-    console.log("in endCall");
+    console.log("in endCall2");
 
     this.setState({
       party: null,
