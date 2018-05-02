@@ -174,8 +174,11 @@ function handleRemoveTrackEvent(event, on_call_end) {
 function handleICEConnectionStateChangeEvent(event, on_call_end) {
   switch (myPeerConnection.iceConnectionState) {
     case 'closed':
+      console.log("connection closed");
     case 'failed':
+      console.log("connection failed");
     case 'disconnected':
+      console.log("connection disconnected");
       closeVideoCall(on_call_end);
       break;
     default:
@@ -209,7 +212,9 @@ function handleGetUserMediaError(e, on_call_end) {
                 + 'were found.');
       break;
     case 'SecurityError':
+      console.log("security error");
     case 'PermissionDeniedError':
+      console.log("permission denied error");
       break;
     default:
       alert(`Error opening your camera and/or microphone: ${e.message}`);
