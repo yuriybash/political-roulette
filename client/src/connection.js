@@ -41,8 +41,6 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
   connection.onmessage = function (evt) {
     const msg = JSON.parse(evt.data);
 
-    console.log("received socket message of type" + msg.type);
-
     switch (msg.type) {
       case 'delay':
         on_delay();
@@ -166,7 +164,6 @@ function handleRemoveTrackEvent(event, on_call_end) {
   const trackList = stream.getTracks();
 
   if (trackList.length === 0) {
-    console.log("I suspect your partner disconnected the call, but you did not");
     closeVideoCall(on_call_end);
   }
 }
@@ -174,11 +171,11 @@ function handleRemoveTrackEvent(event, on_call_end) {
 function handleICEConnectionStateChangeEvent(event, on_call_end) {
   switch (myPeerConnection.iceConnectionState) {
     case 'closed':
-      console.log("connection closed");
+      alert("Your partner disconnected the call.");
     case 'failed':
-      console.log("connection failed");
+      console.log("There was a communication error - please try starting a new call.");
     case 'disconnected':
-      console.log("connection disconnected");
+      alert("Your partner disconnected the call.");
       closeVideoCall(on_call_end);
       break;
     default:
@@ -212,9 +209,7 @@ function handleGetUserMediaError(e, on_call_end) {
                 + 'were found.');
       break;
     case 'SecurityError':
-      console.log("security error");
     case 'PermissionDeniedError':
-      console.log("permission denied error");
       break;
     default:
       alert(`Error opening your camera and/or microphone: ${e.message}`);
