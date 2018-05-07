@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
+import { init, captureMessage } from '@sentry/browser';
 import './App.css';
 import { Alert, Button } from 'reactstrap';
 import ReactLoading from 'react-loading';
 import { connect, closeVideoCall } from './connection';
+
+init({
+ dsn: "https://d1bc38ae393746f4b42ee9e8e38c782c@sentry.io/1364094"
+});
 
 class Video extends React.Component {
   render() {
@@ -96,6 +101,7 @@ class App extends Component {
   }
 
   on_error(e) {
+    captureMessage('Error sent to Sentry: ' + e);
     this.setState({
       selectorIsHidden: true,
       videoIsHidden: true,
