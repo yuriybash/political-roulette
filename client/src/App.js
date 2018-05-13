@@ -6,7 +6,7 @@ import ReactLoading from 'react-loading';
 import { connect, closeVideoCall } from './connection';
 
 init({
- dsn: "https://d1bc38ae393746f4b42ee9e8e38c782c@sentry.io/1364094"
+ dsn: process.env.SENTRY_DSN
 });
 
 class Video extends React.Component {
@@ -79,34 +79,38 @@ class App extends Component {
       party: null,
     };
 
+    this.states = {
+      'default': [0, 1, 1, 1],
+      'delay': [1, 1, 0, 1],
+      'call': [1, 0, 1, 1],
+      'error': [1, 1, 1, 0],
+    };
+
     this.endCall = this.endCall.bind(this);
   }
 
-  on_delay() {
+  setCorrectState(state){
+    const state_vals = this.states[state];
     this.setState({
-      selectorIsHidden: true,
-      videoIsHidden: true,
-      delayIsHidden: false,
-      errorIsHidden: true,
+      selectorIsHidden: state_vals[0],
+      videoIsHidden: state_vals[1],
+      delayIsHidden: state_vals[2],
+      errorIsHidden: state_vals[3],
     });
+  }
+
+  on_delay() {
+    this.setCorrectState('delay')
   }
 
   on_call() {
-    this.setState({
-      selectorIsHidden: true,
-      videoIsHidden: false,
-      delayIsHidden: true,
-      errorIsHidden: true,
-    });
+    this.setCorrectState('call')
   }
 
   on_error(e) {
-    captureMessage('Error sent to Sentry: ' + e);
+    // captureMessage('Error sent to Sentry: ' + e);
+    this.setCorrectState('error')
     this.setState({
-      selectorIsHidden: true,
-      videoIsHidden: true,
-      delayIsHidden: true,
-      errorIsHidden: false,
       error_message: e.message,
     });
   }
