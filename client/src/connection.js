@@ -163,7 +163,7 @@ async function handleNegotiationNeededEvent() {
     log("*** Negotiation needed");
     log("in handleNegotiationNeededEvent, current state: " + myPeerConnection.signalingState);
 
-    if (myPeerConnection._negotiating == true) return;
+    if (myPeerConnection._negotiating === true) return;
     log("*** Negotiation needed");
     myPeerConnection._negotiating = true;
     try {
@@ -378,7 +378,7 @@ function handleHangUpMsg(msg, on_close) {
     closeVideoCall(on_close);
 }
 
-function closeVideoCall(on_close) {
+export function closeVideoCall(on_close) {
     let remoteVideo = document.getElementById("received_video");
     let localVideo = document.getElementById("local_video");
 

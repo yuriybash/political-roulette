@@ -117,6 +117,10 @@ span.line {
   display: inline-block;
 }
 
-/*.outer_button div {*/
-  /*float: none*/
-/*}*/
+#hangup-button {
+  width: 25%;
+  margin-right: 13%;
+  font-size: 4vh;
+  padding: 0;
+  margin-top: 0;
+}

@@ -2,13 +2,9 @@ import React, {Component} from 'react';
 import './App.css';
 import {Alert, Button} from 'reactstrap';
 import ReactLoading from 'react-loading';
-import {connect} from "./connection";
+import {connect, closeVideoCall} from "./connection";
 
 class Video extends React.Component{
-
-    hangUpCall(){
-        console.log("hanging up")
-    };
 
     render() {
         return (
@@ -16,10 +12,9 @@ class Video extends React.Component{
                 <div className="camera-box">
                     <video id="received_video" autoPlay></video>
                     <video id="local_video" autoPlay muted></video>
-                    {/*<button id="hangup-button" onClick={this.hangUpCall} disabled>*/}
-                        {/*End Call*/}
-                    {/*</button>*/}
                 </div>
+
+                <Button id="hangup-button" onClick={closeVideoCall.bind(this, this.props.endCall.bind(this, true))} enabled="true" outline color="primary">End Call</Button>
             </div>
         )
     }
@@ -71,13 +66,18 @@ class Error extends React.Component {
 
 class App extends Component {
 
-    state = {
-        selectorIsHidden: false,
-        videoIsHidden: true,
-        delayIsHidden: true,
-        errorIsHidden: true,
-        party: null
-    };
+    constructor(props){
+        super(props)
+        this.state = {
+            selectorIsHidden: false,
+            videoIsHidden: true,
+            delayIsHidden: true,
+            errorIsHidden: true,
+            party: null
+        };
+
+        this.endCall = this.endCall.bind(this);
+    }
 
   on_delay(){
       console.log("in on_delay");
@@ -123,8 +123,10 @@ class App extends Component {
       }
   };
 
-  endCall(){
-      alert("Your partner disconnected the call");
+  endCall(self=false){
+      let text = (self === true) ? "You" : "Your partner";
+      alert(text + " disconnected the call");
+
       this.setState({
           party: null,
           opposite_party: null,
@@ -144,7 +146,7 @@ class App extends Component {
               {!this.state.selectorIsHidden && <UserSelection onClick={(party) => this.startCall(party)}/>}
           </div>
           <div className="video">
-              {!this.state.videoIsHidden && <Video/>}
+              {!this.state.videoIsHidden && <Video endCall={this.endCall}/>}
           </div>
           <div className="delay">
               {!this.state.delayIsHidden && <Delay opposite_party={this.state.opposite_party}/>}
