@@ -103,7 +103,7 @@ class App extends Component {
       videoIsHidden: true,
       delayIsHidden: true,
       errorIsHidden: false,
-      error_message: e,
+      error_message: e.message,
     });
   }
 
