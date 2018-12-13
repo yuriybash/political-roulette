@@ -3,7 +3,6 @@ const path = require('path');
 var http = require('http');
 var WebSocketServer = require('websocket').server;
 
-console.log("process.env.PORT: ", process.env.PORT);
 const app = express();
 const port = process.env.PORT || 5000;
 var httpServer = http.createServer(app);
@@ -11,7 +10,6 @@ var httpServer = http.createServer(app);
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'client/build')));
     app.get('*', function(req, res) {
-        console.log("sending response");
         res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
 }
@@ -20,9 +18,7 @@ httpServer.listen(port, function(){
     log("server is listening on port " + port)
 });
 
-var connectionArray = [];
-var lib_queue = [];
-var con_queue = [];
+var connectionArray = [], lib_queue = [], con_queue = [];
 
 function log(text){
     let time = new Date();
@@ -38,10 +34,8 @@ function sendToOneUser(target_clientID, msgString){
 
 function getConnectionForID(target_clientID){
     let connect = null;
-    let i;
 
-    for(i = 0; i < connectionArray.length; i++){
-        console.log("one search");
+    for(let i = 0; i < connectionArray.length; i++){
         if(connectionArray[i].clientID === target_clientID){
             connect = connectionArray[i];
             break;
@@ -60,7 +54,6 @@ wsServer.on('request', function(request){
     let connection = request.accept("json", request.origin);
 
     connection.on('message', function(message){
-        console.log("websocket message received: ", message);
         if(message.type === 'utf8'){
             let msg = JSON.parse(message.utf8Data);
             switch(msg.type){
@@ -74,8 +67,6 @@ wsServer.on('request', function(request){
 
                         if(target_queue.length < 1){
 
-                            console.log("no queue avail.");
-
                             let self_queue = (msg.party === 'liberal') ? lib_queue : con_queue;
                             self_queue.push(connection);
 
@@ -85,7 +76,6 @@ wsServer.on('request', function(request){
                             };
 
                         } else {
-                            console.log('about to pair you');
                             let peer = target_queue.shift();
 
                             outgoing_msg = {
@@ -98,7 +88,6 @@ wsServer.on('request', function(request){
                         sendToOneUser(connection.clientID, JSON.stringify(outgoing_msg));
                         break;
                 default:
-                    console.log("sending message from: ", msg.clientID, " and sending it to: ", msg.target, ", msg: ", msg);
                     sendToOneUser(msg.target, JSON.stringify(msg));
             }
 
@@ -106,12 +95,9 @@ wsServer.on('request', function(request){
     });
 
     connection.on('close', function(reason, description) {
-        // First, remove the connection from the list of connections.
         connectionArray = connectionArray.filter(function(el, idx, ar) {
             return el.connected;
         });
-
-        // Build and output log output for close information.
 
         var logMessage = "Connection closed: " + connection.remoteAddress + " (" +
             reason;

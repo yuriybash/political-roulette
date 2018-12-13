@@ -1,4 +1,3 @@
-/* START WSS CODE */
 export function log(text) {
     let time = new Date();
     console.log("[" + time.toLocaleTimeString() + "] " + text);
