@@ -25,7 +25,7 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
     let serverUrl;
     let scheme = ('https:' === document.location.protocol) ? 'wss' : 'ws';
 
-    serverUrl = scheme + "://" + myHostname + ":5000";
+    serverUrl = scheme + "://" + myHostname;
     connection = new WebSocket(serverUrl, "json");
     connection.onopen = function (evt) {
 
