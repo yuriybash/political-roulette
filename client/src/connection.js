@@ -22,10 +22,9 @@ const myHostname = window.location.hostname;
 export function connect(party, on_delay, on_call_start, on_call_end) {
   test_compatibility();
 
-  let serverUrl;
   const scheme = (document.location.protocol === 'https:') ? 'wss' : 'ws';
 
-  serverUrl = `${scheme}://${myHostname}`;
+  let serverUrl = `${scheme}://${myHostname}`;
   connection = new WebSocket(serverUrl, 'json');
   connection.onopen = function (evt) {
     myUsername = clientID = uuidv4();
@@ -66,20 +65,20 @@ export function connect(party, on_delay, on_call_start, on_call_end) {
           .catch(handleGetUserMediaError);
         break;
 
-      case 'video-offer': // Invitation and offer to chat
+      case 'video-offer':
         on_call_start();
         handleVideoOfferMsg(msg, on_call_end);
         break;
 
-      case 'video-answer': // Callee has answered our offer
+      case 'video-answer':
         handleVideoAnswerMsg(msg);
         break;
 
-      case 'new-ice-candidate': // A new ICE candidate has been received
+      case 'new-ice-candidate':
         handleNewICECandidateMsg(msg);
         break;
 
-      case 'hang-up': // The other peer has hung up the call
+      case 'hang-up':
 
         handleHangUpMsg(msg, on_call_end);
         break;
@@ -273,8 +272,8 @@ export function closeVideoCall(on_close) {
   const localVideo = document.getElementById('local_video');
 
   if (myPeerConnection) {
-    myPeerConnection.onaddstream = null; // For older implementations
-    myPeerConnection.ontrack = null; // For newer ones
+    myPeerConnection.onaddstream = null;
+    myPeerConnection.ontrack = null;
     myPeerConnection.onremovestream = null;
     myPeerConnection.onnicecandidate = null;
     myPeerConnection.oniceconnectionstatechange = null;
