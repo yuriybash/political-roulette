@@ -24,9 +24,7 @@ class Delay extends React.Component {
     return (
       <div>
         <h3 className="loading">
-Please wait, looking for a
-          {this.props.opposite_party}
-...
+            Please wait, looking for a {this.props.opposite_party}...
         </h3>
         <ReactLoading className="spinner" type="spin" color="white" />
       </div>
