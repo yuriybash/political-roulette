@@ -11,6 +11,7 @@ function test_mobile(){
 
 function test_webrtc_support(){
     if(!navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+        console.log("testing webrtc support");
         throw new Error("Sorry, your browser doesn't support WebRTC - please try again with a compatibile browser.")
     }
 }
