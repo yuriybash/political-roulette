@@ -101,7 +101,6 @@ class App extends Component {
   }
 
   on_error(e) {
-    console.log('Error sent to Sentry: ' + e);
     captureMessage('Error sent to Sentry: ' + e);
     this.setState({
       selectorIsHidden: true,
