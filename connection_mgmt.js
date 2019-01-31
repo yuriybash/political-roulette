@@ -1,4 +1,4 @@
-let connectionArray = [], lib_queue = [], con_queue = [];
+var connectionArray = [], lib_queue = [], con_queue = [];
 
 function sendToOneUser(target_clientID, msgString){
     let target_conn = getConnectionForID(target_clientID);
@@ -52,9 +52,7 @@ function handle_request(request){
                             type: "peer_info",
                             peer_clientID: peer.clientID
                         };
-
                     }
-
                     sendToOneUser(connection.clientID, JSON.stringify(outgoing_msg));
                     break;
                 default:
@@ -87,7 +85,6 @@ function handle_request(request){
         }
         console.log(`[${new Date().toLocaleTimeString()}] ${logMessage})`);
     });
-
 
 }
 
