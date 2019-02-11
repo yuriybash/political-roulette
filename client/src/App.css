@@ -7,7 +7,7 @@ root,
 }
 
 body {
-  background-image: linear-gradient(to bottom, #282c34, 70%, #415a8c) !important;
+  background-image: linear-gradient(to bottom, #282c34, 50%, #415a8c) !important;
 }
 
 .App-logo {
